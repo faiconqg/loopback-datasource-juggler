@@ -545,6 +545,30 @@ describe('DataSource', function() {
       ds.connector.should.equal(connector);
     });
   });
+
+  describe('getMaxOfflineRequests', () => {
+    let ds;
+    beforeEach(() => ds = new DataSource('ds', {connector: 'memory'}));
+
+    it('sets the default maximum number of event listeners to 16', () => {
+      ds.getMaxOfflineRequests().should.be.eql(16);
+    });
+
+    it('uses the default max number of event listeners if the provided one is less than 16', () => {
+      ds.settings.maxOfflineRequests = 15;
+      ds.getMaxOfflineRequests().should.be.eql(16);
+    });
+
+    it('uses provided number of listeners if it is greater than 16', () => {
+      ds.settings.maxOfflineRequests = 17;
+      ds.getMaxOfflineRequests().should.be.eql(17);
+    });
+
+    it('uses default if a non-number is provided for the max number of listeners', () => {
+      ds.settings.maxOfflineRequests = '17';
+      ds.getMaxOfflineRequests().should.be.eql(16);
+    });
+  });
 });
 
 function givenMockConnector(props) {
