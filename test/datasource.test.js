@@ -554,9 +554,9 @@ describe('DataSource', function() {
       ds.getMaxOfflineRequests().should.be.eql(16);
     });
 
-    it('uses the default max number of event listeners if the provided one is less than 16', () => {
+    it('uses the provided max number of listeners even if it is less than 16', () => {
       ds.settings.maxOfflineRequests = 15;
-      ds.getMaxOfflineRequests().should.be.eql(16);
+      ds.getMaxOfflineRequests().should.be.eql(15);
     });
 
     it('uses provided number of listeners if it is greater than 16', () => {
@@ -564,9 +564,12 @@ describe('DataSource', function() {
       ds.getMaxOfflineRequests().should.be.eql(17);
     });
 
-    it('uses default if a non-number is provided for the max number of listeners', () => {
+    it('throws an error if a non-number is provided for the max number of listeners', () => {
       ds.settings.maxOfflineRequests = '17';
-      ds.getMaxOfflineRequests().should.be.eql(16);
+
+      (function() {
+        return ds.getMaxOfflineRequests();
+      }).should.throw('maxOfflineRequests must be a number');
     });
   });
 });
